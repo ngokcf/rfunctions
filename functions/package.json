@@ -6,7 +6,10 @@
     "express-handlebars": "^3.0.0",
     "firebase-admin": "^4.1.2",
     "firebase-functions": "^0.5.9",
-    "handlebars": "^4.0.8"
+    "handlebars": "^4.0.8",
+    "request": "^2.80.0",
+    "request-promise": "^4.1.1",
+    "secure-compare": "^3.0.1"
   },
   "private": true
 }
