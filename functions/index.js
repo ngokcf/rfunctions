@@ -37,15 +37,12 @@ exports.githubWebhook = functions.https.onRequest((req, res) => {
   const cipher = 'sha1';
   const signature = req.headers['x-hub-signature'];
 
-  // TODO: Configure the `github.secret` Google Cloud environment variables.
   const hmac = crypto.createHmac(cipher, functions.config().github.secret)
-      // The JSON body is automatically parsed by Cloud Functions so we re-stringify it.
       .update(JSON.stringify(req.body, null, 0))
       .digest('hex');
 
   const expectedSignature = `${cipher}=${hmac}`;
 
-  // Check that the body of the request has been signed with the GitHub Secret.
   if (secureCompare(signature, expectedSignature)) {
     postToSlack(req.body.compare, req.body.commits.length, req.body.repository).then(() => {
       res.end();
@@ -69,7 +66,4 @@ function postToSlack(url, commits, repo) {
     json: true
   });
 }
-
-
-
 
