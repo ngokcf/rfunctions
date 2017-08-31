@@ -16,10 +16,32 @@ const app = express();
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 app.get('/', (req, res) => {
-   res.render('top', {});
+  res.render('top', {});
+});
+app.get('/messages', (req, res) => {
+    let messages = [ 
+      { id: 1, subject: 'subject', body: 'body' },
+      { id: 2, subject: 'subject', body: 'bodyadvdavdavdavd' },
+      { id: 3, subject: 'subject', body: 'bodyadvadvdavvvvvvvvvvvvvvvadvdafdd' },
+      { id: 4, subject: 'subject', body: 'bosuccessfullydysuccessfully' },
+      { id: 5, subject: 'subject', body: 'bosuccessfullydysuccessfully' },
+      { id: 6, subject: 'subject', body: 'bosuccessfullydysuccessfully' },
+      { id: 7, subject: 'subject', body: 'bosuccessfullydysuccessfully' },
+      { id: 8, subject: 'subject', body: 'bosuccessfullydysuccessfully' },
+      { id: 9, subject: 'subject', body: 'bosuccessfullydysuccessfully' }
+    ];
+    toJson(res, messages)
+});
+app.get('*', (req, res) => {
+  res.render('notfound', {});
 });
 
-// This HTTPS endpoint xxx
+function toJson(res, body) {
+    res.contentType('application/json');
+    res.send(JSON.stringify(body));
+}
+
+// This HTTPS endpoint app
 exports.app = functions.https.onRequest(app);
 
 // Realtime Database Functions
@@ -29,6 +51,7 @@ exports.countComment = functions.database.ref('/comment/{commentid}/list').onWri
   return event.data.ref.once('value')
       .then(data => countRef.set(data.numChildren()));
 });
+
 
 // Github and Slack Functions
 exports.githubWebhook = functions.https.onRequest((req, res) => {
@@ -55,6 +78,7 @@ exports.githubWebhook = functions.https.onRequest((req, res) => {
     res.status(403).send('Your x-hub-signature\'s bad and you should feel bad!');
   }
 });
+
 
 function postToSlack(url, commits, repo) {
   return rp({
